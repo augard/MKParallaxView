@@ -69,7 +69,6 @@
     if (self)
     {
         _backgroundShouldRepeat = NO;
-        _backgroundImage = nil;
         
         self.backgroundColor = [UIColor clearColor];
         
@@ -107,9 +106,19 @@
 
 #pragma mark -
 #pragma mark - Overriding Methods
+- (UIColor *)backgroundColor
+{
+    return self.parallaxImageView.backgroundColor;
+}
+
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
     self.parallaxImageView.backgroundColor = backgroundColor;
+}
+
+- (UIImage *)backgroundImage
+{
+    return self.parallaxImageView.image;
 }
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage
@@ -129,6 +138,11 @@
                                                       selector:@selector(updateParallaxImage)
                                                       userInfo:nil
                                                        repeats:YES];
+}
+
+- (UIViewContentMode)contentMode
+{
+    return self.parallaxImageView.contentMode;
 }
 
 - (void)setContentMode:(UIViewContentMode)contentMode
