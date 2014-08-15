@@ -68,32 +68,43 @@
     
     if (self)
     {
-        _backgroundShouldRepeat = NO;
-        
-        self.backgroundColor = [UIColor clearColor];
-        
-        _updateRate = defaultUpdateRate;
-        
-        _parallaxManager = [MKParallaxManager standardParallaxManager];
-        
-        _frameScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, frame.size.width, frame.size.height)];
-        _frameScrollView.scrollEnabled = NO;
-        
-        _parallaxImageView = [[UIImageView alloc] initWithFrame:[_parallaxManager parallexFrameWithViewFrame:_frameScrollView.frame]];
-        _parallaxImageView.backgroundColor = [UIColor clearColor];
-        _parallaxImageView.contentMode = UIViewContentModeScaleAspectFill;
-        
-        _updateTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / self.updateRate)
-                                                        target:self
-                                                      selector:@selector(updateParallaxImage)
-                                                      userInfo:nil
-                                                       repeats:YES];
+        [self initCommon];
     }
     
     return self;
 }
 
-- (void)layoutSubviews 
+- (void)awakeFromNib
+{
+    [self initCommon];
+}
+
+- (void)initCommon
+{
+    _backgroundShouldRepeat = NO;
+    
+    self.backgroundColor = [UIColor clearColor];
+    
+    _updateRate = defaultUpdateRate;
+    
+    _parallaxManager = [MKParallaxManager standardParallaxManager];
+    
+    _frameScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.frame.size.width, self.frame.size.height)];
+    _frameScrollView.scrollEnabled = NO;
+    
+    _parallaxImageView = [[UIImageView alloc] initWithFrame:[_parallaxManager parallexFrameWithViewFrame:_frameScrollView.frame]];
+    _parallaxImageView.backgroundColor = [UIColor clearColor];
+    _parallaxImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _parallaxImageView.clipsToBounds = YES;
+    
+    _updateTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0f / self.updateRate)
+                                                    target:self
+                                                  selector:@selector(updateParallaxImage)
+                                                  userInfo:nil
+                                                   repeats:YES];
+}
+
+- (void)layoutSubviews
 {
     [super layoutSubviews];
     
@@ -111,15 +122,20 @@
     return self.parallaxImageView.backgroundColor;
 }
 
+- (UIImage *)backgroundImage
+{
+    return self.parallaxImageView.image;
+}
+
+- (UIViewContentMode)contentMode
+{
+    return self.parallaxImageView.contentMode;
+}
+
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
     super.backgroundColor = backgroundColor;
     self.parallaxImageView.backgroundColor = backgroundColor;
-}
-
-- (UIImage *)backgroundImage
-{
-    return self.parallaxImageView.image;
 }
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage
@@ -139,11 +155,6 @@
                                                       selector:@selector(updateParallaxImage)
                                                       userInfo:nil
                                                        repeats:YES];
-}
-
-- (UIViewContentMode)contentMode
-{
-    return self.parallaxImageView.contentMode;
 }
 
 - (void)setContentMode:(UIViewContentMode)contentMode
