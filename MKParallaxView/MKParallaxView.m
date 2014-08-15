@@ -113,6 +113,7 @@
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
+    super.backgroundColor = backgroundColor;
     self.parallaxImageView.backgroundColor = backgroundColor;
 }
 
